@@ -22,6 +22,22 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Category'
+              example:
+                - id: 1
+                  user_id: 1
+                  label: Courses
+                  amount: 215.95
+                  created_at: "2026-10-01T09:30:00Z"
+                - id: 2
+                  user_id: 1
+                  label: Dépenses Civic
+                  amount: 254.80
+                  created_at: "2026-10-01T09:31:00Z"
+                - id: 3
+                  user_id: 1
+                  label: Abonnements
+                  amount: 39.46
+                  created_at: "2026-10-01T09:32:00Z"
         '500':
           $ref: '#/components/responses/InternalError'
     post:
@@ -35,6 +51,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/NewCategory'
+            example:
+              label: Abonnements
       responses:
         '201':
           description: Category created successfully
@@ -42,6 +60,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
+              example:
+                id: 3
+                user_id: 1
+                label: Abonnements
+                amount: 0.0
+                created_at: "2026-10-01T09:32:00Z"
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -61,6 +85,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
+              example:
+                id: 1
+                user_id: 1
+                label: Courses
+                amount: 215.95
+                created_at: "2026-10-01T09:30:00Z"
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -78,6 +108,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateCategory'
+            example:
+              label: Dépenses Civic
       responses:
         '200':
           description: Category updated successfully
@@ -85,6 +117,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
+              example:
+                id: 2
+                user_id: 1
+                label: Dépenses Civic
+                amount: 254.80
+                created_at: "2026-10-01T09:31:00Z"
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -122,6 +160,100 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Expense'
+              examples:
+                courses:
+                  summary: Dépenses de la catégorie Courses
+                  value:
+                    - id: 1
+                      label: Carrefour
+                      user_id: 1
+                      category_id: 1
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 54.30
+                      created_at: "2026-10-02T18:12:00Z"
+                    - id: 2
+                      label: Leclerc
+                      user_id: 1
+                      category_id: 1
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 87.15
+                      created_at: "2026-10-09T10:20:00Z"
+                    - id: 3
+                      label: Lidl
+                      user_id: 1
+                      category_id: 1
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 32.60
+                      created_at: "2026-10-16T17:45:00Z"
+                    - id: 4
+                      label: Intermarché
+                      user_id: 1
+                      category_id: 1
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 41.90
+                      created_at: "2026-10-23T12:10:00Z"
+                civic:
+                  summary: Dépenses de la catégorie Dépenses Civic
+                  value:
+                    - id: 5
+                      label: Plein essence TotalEnergies
+                      user_id: 1
+                      category_id: 2
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 62.40
+                      created_at: "2026-10-03T07:45:00Z"
+                    - id: 6
+                      label: Vidange + filtre à huile
+                      user_id: 1
+                      category_id: 2
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 89.90
+                      created_at: "2026-10-12T14:30:00Z"
+                    - id: 7
+                      label: Plaquettes de frein avant
+                      user_id: 1
+                      category_id: 2
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 74.50
+                      created_at: "2026-10-15T16:00:00Z"
+                    - id: 8
+                      label: Bougies d'allumage NGK
+                      user_id: 1
+                      category_id: 2
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 28.00
+                      created_at: "2026-10-19T11:15:00Z"
+                abonnements:
+                  summary: Dépenses de la catégorie Abonnements
+                  value:
+                    - id: 9
+                      label: Netflix
+                      user_id: 1
+                      category_id: 3
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 13.49
+                      created_at: "2026-10-05T07:00:00Z"
+                    - id: 10
+                      label: Crunchyroll
+                      user_id: 1
+                      category_id: 3
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 7.99
+                      created_at: "2026-10-08T07:00:00Z"
+                    - id: 11
+                      label: Spotify
+                      user_id: 1
+                      category_id: 3
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 10.99
+                      created_at: "2026-10-12T07:00:00Z"
+                    - id: 12
+                      label: Amazon Prime
+                      user_id: 1
+                      category_id: 3
+                      month: "2026-10-01T00:00:00Z"
+                      amount: 6.99
+                      created_at: "2026-10-15T07:00:00Z"
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -138,6 +270,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/NewExpenseForCategory'
+            example:
+              label: Netflix
+              category_id: 3
+              month: "2026-10-01T00:00:00Z"
+              amount: 13.49
       responses:
         '201':
           description: Expense created successfully
@@ -145,6 +282,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Expense'
+              example:
+                id: 9
+                label: Netflix
+                user_id: 1
+                category_id: 3
+                month: "2026-10-01T00:00:00Z"
+                amount: 13.49
+                created_at: "2026-10-05T07:00:00Z"
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -164,6 +309,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Expense'
+              example:
+                id: 1
+                label: Carrefour
+                user_id: 1
+                category_id: 1
+                month: "2026-10-01T00:00:00Z"
+                amount: 54.30
+                created_at: "2026-10-02T18:12:00Z"
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -181,6 +334,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateExpense'
+            example:
+              label: Plein essence TotalEnergies
+              category_id: 2
+              amount: 64.10
       responses:
         '200':
           description: Expense updated successfully
@@ -188,6 +345,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Expense'
+              example:
+                id: 5
+                label: Plein essence TotalEnergies
+                user_id: 1
+                category_id: 2
+                month: "2026-10-01T00:00:00Z"
+                amount: 64.10
+                created_at: "2026-10-03T07:45:00Z"
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -227,7 +392,7 @@ components:
   schemas:
     Category:
       type: object
-      required: [id, user_id, label, created_at]
+      required: [id, user_id, label, amount, created_at]
       properties:
         id:
           type: integer
@@ -237,27 +402,24 @@ components:
           format: int64
         label:
           type: string
+        amount:
+          type: number
+          format: double
         created_at:
           type: string
           format: date-time
     NewCategory:
       type: object
-      required: [label, amount]
+      required: [label]
       properties:
         label:
           type: string
-        amount:
-          type: number
-          format: double
     UpdateCategory:
       type: object
-      required: [label, amount]
+      required: [label]
       properties:
         label:
           type: string
-        amount:
-          type: number
-          format: double
     Expense:
       type: object
       required: [id, label, user_id, month, amount, created_at]
