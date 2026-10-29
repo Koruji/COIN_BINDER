@@ -1,1 +1,3 @@
-/target
+/api/target
+/client/.vscode
+/client/node_modules
