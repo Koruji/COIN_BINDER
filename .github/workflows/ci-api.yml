@@ -1,0 +1,26 @@
+name: CI API
+
+on:
+  pull_request:
+    paths: ["api/**", "openapi.yaml", ".github/workflows/ci-api.yml"]
+  push:
+    branches: [main, develop]
+    paths: ["api/**", "openapi.yaml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: api
+      - run: cargo fmt --check
+      - run: cargo clippy -- -D warnings
+      - run: cargo test
