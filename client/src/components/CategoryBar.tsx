@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { colors, fonts } from "@/constants/theme";
+import { colors, fonts, radii } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 import { blend } from "@/utils/color";
 
@@ -37,7 +37,7 @@ function createStyles(scale: number, color: string) {
   return StyleSheet.create({
     container: {
       backgroundColor: blend(color, colors.card, 0.5),
-      borderRadius: s(3),
+      borderRadius: s(radii.small),
       overflow: "hidden",
     },
     row: {
@@ -59,13 +59,13 @@ function createStyles(scale: number, color: string) {
       height: s(8),
       marginHorizontal: s(8),
       backgroundColor: colors.card,
-      borderRadius: s(2),
+      borderRadius: s(4),
       overflow: "hidden",
     },
     fill: {
       height: "100%",
       backgroundColor: color,
-      borderRadius: s(2),
+      borderRadius: s(4),
     },
     amount: {
       flex: 3,

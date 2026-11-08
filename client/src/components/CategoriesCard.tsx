@@ -20,6 +20,7 @@ type CategoryRow = {
 
 type CategoriesCardProps = {
   color?: string;
+  onManageExpenses?: (category: { id: string; name: string }) => void;
 };
 
 const rows: CategoryRow[] = [
@@ -86,7 +87,7 @@ function createStyles(scale: number) {
   });
 }
 
-export function CategoriesCard({ color = colors.accent }: CategoriesCardProps) {
+export function CategoriesCard({ color = colors.accent, onManageExpenses }: CategoriesCardProps) {
   const scale = useScale();
   const styles = useMemo(() => createStyles(scale), [scale]);
   const total = rows.reduce((sum, row) => sum + categoryAmount(row), 0);
@@ -111,9 +112,7 @@ export function CategoriesCard({ color = colors.accent }: CategoriesCardProps) {
               label: e.label,
               amount: formatAmount(e.amount),
             }))}
-            onManageExpenses={() => {
-              // TODO: open the expenses dialog
-            }}
+            onManageExpenses={() => onManageExpenses?.({ id: row.id, name: row.name })}
             color={color}
           />
         ))}

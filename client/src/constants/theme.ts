@@ -3,6 +3,12 @@ export const colors = {
   card: "#F4EFE3",
   accent: "#D58D6E",
   text: "#2E2618",
+  danger: "#B5473F",
+};
+
+export const radii = {
+  small: 8,
+  large: 12,
 };
 
 export const fonts = {

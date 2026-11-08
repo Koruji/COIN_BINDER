@@ -1,7 +1,7 @@
 import { ReactNode, useMemo } from "react";
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
-import { colors, fonts } from "@/constants/theme";
+import { colors, fonts, radii } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 
 type BinderCardProps = {
@@ -26,8 +26,8 @@ function createStyles(scale: number, color: string) {
       paddingHorizontal: s(16),
       justifyContent: "center",
       backgroundColor: color,
-      borderTopLeftRadius: s(6),
-      borderTopRightRadius: s(6),
+      borderTopLeftRadius: s(radii.large),
+      borderTopRightRadius: s(radii.large),
     },
     tabLabel: {
       color: colors.card,
@@ -36,9 +36,9 @@ function createStyles(scale: number, color: string) {
     },
     card: {
       backgroundColor: colors.card,
-      borderTopRightRadius: s(6),
-      borderBottomLeftRadius: s(6),
-      borderBottomRightRadius: s(6),
+      borderTopRightRadius: s(radii.large),
+      borderBottomLeftRadius: s(radii.large),
+      borderBottomRightRadius: s(radii.large),
       paddingTop: s(14),
       paddingBottom: s(18),
       paddingHorizontal: s(10),
@@ -50,7 +50,7 @@ function createStyles(scale: number, color: string) {
       right: 0,
       height: s(5),
       backgroundColor: color,
-      borderTopRightRadius: s(6),
+      borderTopRightRadius: s(radii.large),
     },
   });
 }
