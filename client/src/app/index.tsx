@@ -1,11 +1,14 @@
 import { StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CategoriesCard } from "@/components/CategoriesCard";
 import { colors } from "@/constants/theme";
 
 export default function Index() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       <View style={styles.spaceTop} />
       <CategoriesCard />
       <View style={styles.spaceBottom} />

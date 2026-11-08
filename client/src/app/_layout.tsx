@@ -8,14 +8,14 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  const [loaded] = useFonts({
+  const [loaded, error] = useFonts({
     IBMPlexMono_400Regular,
     IBMPlexMono_600SemiBold,
     IBMPlexMono_700Bold,
     SpaceGrotesk_700Bold,
   });
 
-  if (!loaded) {
+  if (!loaded && !error) {
     return null;
   }
 

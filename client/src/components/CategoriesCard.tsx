@@ -9,8 +9,7 @@ import { scaled, useScale } from "@/hooks/useScale";
 type CategoryRow = {
   id: string;
   name: string;
-  amount: string;
-  ratio: number;
+  amount: number;
 };
 
 type CategoriesCardProps = {
@@ -18,10 +17,14 @@ type CategoriesCardProps = {
 };
 
 const rows: CategoryRow[] = [
-  { id: "1", name: "CIVIC", amount: "150, 00", ratio: 63 / 195 },
-  { id: "2", name: "Sorties, events", amount: "200, 00", ratio: 94 / 195 },
-  { id: "3", name: "Vêtements", amount: "100, 00", ratio: 28 / 195 },
+  { id: "1", name: "CIVIC", amount: 150 },
+  { id: "2", name: "Sorties, events", amount: 200 },
+  { id: "3", name: "Vêtements", amount: 100 },
 ];
+
+function formatAmount(value: number) {
+  return value.toFixed(2).replace(".", ", ");
+}
 
 function createStyles(scale: number) {
   const s = (value: number) => scaled(value, scale);
@@ -60,12 +63,15 @@ function createStyles(scale: number) {
 export function CategoriesCard({ color = colors.accent }: CategoriesCardProps) {
   const scale = useScale();
   const styles = useMemo(() => createStyles(scale), [scale]);
+  const total = rows.reduce((sum, row) => sum + row.amount, 0);
 
   return (
     <TabCard title="Catégories" color={color}>
       <View style={styles.header}>
-        <Text style={styles.count}>3 catégories</Text>
-        <Text style={styles.total}>450, 00</Text>
+        <Text style={styles.count}>
+          {rows.length} {rows.length > 1 ? "catégories" : "catégorie"}
+        </Text>
+        <Text style={styles.total}>{formatAmount(total)}</Text>
       </View>
       <View style={styles.divider} />
       <View style={styles.list}>
@@ -73,8 +79,8 @@ export function CategoriesCard({ color = colors.accent }: CategoriesCardProps) {
           <CategoryBar
             key={row.id}
             name={row.name}
-            amount={row.amount}
-            ratio={row.ratio}
+            amount={formatAmount(row.amount)}
+            ratio={total > 0 ? row.amount / total : 0}
             color={color}
           />
         ))}
