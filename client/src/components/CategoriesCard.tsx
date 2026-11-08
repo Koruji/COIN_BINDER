@@ -2,14 +2,20 @@ import { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { CategoryBar } from "@/components/CategoryBar";
-import { TabCard } from "@/components/TabCard";
+import { BinderCard } from "@/components/BinderCard";
 import { colors, fonts } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
+
+type ExpenseRow = {
+  id: string;
+  label: string;
+  amount: number;
+};
 
 type CategoryRow = {
   id: string;
   name: string;
-  amount: number;
+  expenses: ExpenseRow[];
 };
 
 type CategoriesCardProps = {
@@ -17,13 +23,33 @@ type CategoriesCardProps = {
 };
 
 const rows: CategoryRow[] = [
-  { id: "1", name: "CIVIC", amount: 150 },
-  { id: "2", name: "Sorties, events", amount: 200 },
-  { id: "3", name: "Vêtements", amount: 100 },
+  {
+    id: "1",
+    name: "CIVIC",
+    expenses: [
+      { id: "1", label: "Assurance voiture", amount: 68.94 },
+      { id: "2", label: "Assurance voiture", amount: 88.94 },
+      { id: "3", label: "Assurance voiture", amount: 88.94 },
+    ],
+  },
+  {
+    id: "2",
+    name: "Sorties, events",
+    expenses: [{ id: "1", label: "Concert", amount: 200 }],
+  },
+  {
+    id: "3",
+    name: "Vêtements",
+    expenses: [{ id: "1", label: "Veste", amount: 100 }],
+  },
 ];
 
 function formatAmount(value: number) {
   return value.toFixed(2).replace(".", ", ");
+}
+
+function categoryAmount(row: CategoryRow) {
+  return row.expenses.reduce((sum, expense) => sum + expense.amount, 0);
 }
 
 function createStyles(scale: number) {
@@ -63,28 +89,35 @@ function createStyles(scale: number) {
 export function CategoriesCard({ color = colors.accent }: CategoriesCardProps) {
   const scale = useScale();
   const styles = useMemo(() => createStyles(scale), [scale]);
-  const total = rows.reduce((sum, row) => sum + row.amount, 0);
+  const total = rows.reduce((sum, row) => sum + categoryAmount(row), 0);
 
   return (
-    <TabCard title="Catégories" color={color}>
+    <BinderCard title="Catégories" color={color}>
       <View style={styles.header}>
         <Text style={styles.count}>
           {rows.length} {rows.length > 1 ? "catégories" : "catégorie"}
         </Text>
         <Text style={styles.total}>{formatAmount(total)}</Text>
       </View>
-      <View style={styles.divider} />
       <View style={styles.list}>
         {rows.map((row) => (
           <CategoryBar
             key={row.id}
             name={row.name}
-            amount={formatAmount(row.amount)}
-            ratio={total > 0 ? row.amount / total : 0}
+            amount={formatAmount(categoryAmount(row))}
+            ratio={total > 0 ? categoryAmount(row) / total : 0}
+            expenses={row.expenses.map((e) => ({
+              id: e.id,
+              label: e.label,
+              amount: formatAmount(e.amount),
+            }))}
+            onManageExpenses={() => {
+              // TODO: open the expenses dialog
+            }}
             color={color}
           />
         ))}
       </View>
-    </TabCard>
+    </BinderCard>
   );
 }

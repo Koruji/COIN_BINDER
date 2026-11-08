@@ -4,7 +4,7 @@ import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { colors, fonts } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 
-type TabCardProps = {
+type BinderCardProps = {
   title: string;
   color?: string;
   children?: ReactNode;
@@ -55,7 +55,7 @@ function createStyles(scale: number, color: string) {
   });
 }
 
-export function TabCard({ title, color = colors.accent, children, style }: TabCardProps) {
+export function BinderCard({ title, color = colors.accent, children, style }: BinderCardProps) {
   const scale = useScale();
   const styles = useMemo(() => createStyles(scale, color), [scale, color]);
 

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CategoriesCard } from "@/components/CategoriesCard";
@@ -8,11 +8,15 @@ export default function Index() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      <View style={styles.spaceTop} />
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={[
+        styles.content,
+        { paddingTop: insets.top + 48, paddingBottom: insets.bottom + 24 },
+      ]}
+    >
       <CategoriesCard />
-      <View style={styles.spaceBottom} />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -20,13 +24,9 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  content: {
     alignItems: "center",
     paddingHorizontal: 14,
-  },
-  spaceTop: {
-    flex: 1,
-  },
-  spaceBottom: {
-    flex: 3,
   },
 });
