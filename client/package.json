@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@expo-google-fonts/ibm-plex-mono": "^0.4.1",
+    "@expo-google-fonts/space-grotesk": "^0.4.1",
     "@expo/ui": "~58.0.25",
     "expo": "~58.0.21",
     "expo-constants": "~58.0.14",
@@ -39,7 +41,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "generate:api": "npx openapi-typescript ../openapi.yaml -o src/types/api.d.ts"
   },
   "private": true
 }
