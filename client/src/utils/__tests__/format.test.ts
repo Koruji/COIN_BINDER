@@ -10,6 +10,6 @@ describe("formatAmount", () => {
     ])
     ("convert %d to %s", (input, expected) => {
         var result = formatAmount(input);
-        expect(result).toBe(expected);
+        expect(result).toEqual(expected);
     })
 });
