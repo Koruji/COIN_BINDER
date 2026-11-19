@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { colors, fonts } from "@/constants/theme";
+import { fonts, Palette, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 import { blend } from "@/utils/color";
 
@@ -15,7 +15,7 @@ type CategoryBarProps = {
 
 const arrowDown = require("../../assets/images/arrow-drop-down.svg");
 
-function createStyles(scale: number, color: string) {
+function createStyles(scale: number, color: string, colors: Palette) {
   const s = (value: number) => scaled(value, scale);
 
   return StyleSheet.create({
@@ -63,9 +63,14 @@ function createStyles(scale: number, color: string) {
   });
 }
 
-export function CategoryBar({ name, amount, ratio, color = colors.accent }: CategoryBarProps) {
+export function CategoryBar({ name, amount, ratio, color }: CategoryBarProps) {
   const scale = useScale();
-  const styles = useMemo(() => createStyles(scale, color), [scale, color]);
+  const colors = useColors();
+  const barColor = color ?? colors.categories;
+  const styles = useMemo(
+    () => createStyles(scale, barColor, colors),
+    [scale, barColor, colors],
+  );
   const progress = Math.min(Math.max(ratio, 0), 1);
 
   return (
@@ -79,7 +84,7 @@ export function CategoryBar({ name, amount, ratio, color = colors.accent }: Cate
       <Text style={styles.amount} numberOfLines={1} adjustsFontSizeToFit>
         {amount}
       </Text>
-      <Image source={arrowDown} tintColor={color} style={styles.arrow} />
+      <Image source={arrowDown} tintColor={barColor} style={styles.arrow} />
     </View>
   );
 }

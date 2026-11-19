@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { CategoryBar } from "@/components/CategoryBar";
 import { TabCard } from "@/components/TabCard";
-import { colors, fonts } from "@/constants/theme";
+import { fonts, Palette, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 
 type CategoryRow = {
@@ -23,7 +23,7 @@ const rows: CategoryRow[] = [
   { id: "3", name: "Vêtements", amount: "100, 00", ratio: 28 / 195 },
 ];
 
-function createStyles(scale: number) {
+function createStyles(scale: number, colors: Palette) {
   const s = (value: number) => scaled(value, scale);
 
   return StyleSheet.create({
@@ -57,12 +57,14 @@ function createStyles(scale: number) {
   });
 }
 
-export function CategoriesCard({ color = colors.accent }: CategoriesCardProps) {
+export function CategoriesCard({ color }: CategoriesCardProps) {
   const scale = useScale();
-  const styles = useMemo(() => createStyles(scale), [scale]);
+  const colors = useColors();
+  const styles = useMemo(() => createStyles(scale, colors), [scale, colors]);
+  const cardColor = color ?? colors.categories;
 
   return (
-    <TabCard title="Catégories" color={color}>
+    <TabCard title="Catégories" color={cardColor}>
       <View style={styles.header}>
         <Text style={styles.count}>3 catégories</Text>
         <Text style={styles.total}>450, 00</Text>
@@ -75,7 +77,7 @@ export function CategoriesCard({ color = colors.accent }: CategoriesCardProps) {
             name={row.name}
             amount={row.amount}
             ratio={row.ratio}
-            color={color}
+            color={cardColor}
           />
         ))}
       </View>

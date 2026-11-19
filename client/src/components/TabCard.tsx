@@ -1,7 +1,7 @@
 import { ReactNode, useMemo } from "react";
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
-import { colors, fonts } from "@/constants/theme";
+import { fonts, Palette, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 
 type TabCardProps = {
@@ -11,7 +11,7 @@ type TabCardProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-function createStyles(scale: number, color: string) {
+function createStyles(scale: number, color: string, colors: Palette) {
   const s = (value: number) => scaled(value, scale);
 
   return StyleSheet.create({
@@ -30,7 +30,7 @@ function createStyles(scale: number, color: string) {
       borderTopRightRadius: s(6),
     },
     tabLabel: {
-      color: colors.card,
+      color: colors.onColor,
       fontFamily: fonts.title,
       fontSize: s(14),
     },
@@ -55,9 +55,14 @@ function createStyles(scale: number, color: string) {
   });
 }
 
-export function TabCard({ title, color = colors.accent, children, style }: TabCardProps) {
+export function TabCard({ title, color, children, style }: TabCardProps) {
   const scale = useScale();
-  const styles = useMemo(() => createStyles(scale, color), [scale, color]);
+  const colors = useColors();
+  const tabColor = color ?? colors.categories;
+  const styles = useMemo(
+    () => createStyles(scale, tabColor, colors),
+    [scale, tabColor, colors],
+  );
 
   return (
     <View style={[styles.wrapper, style]}>
