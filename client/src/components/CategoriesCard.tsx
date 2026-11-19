@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { CategoryBar } from "@/components/CategoryBar";
 import { BinderCard } from "@/components/BinderCard";
-import { colors, fonts } from "@/constants/theme";
+import { fonts, Palette, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 
 type ExpenseRow = {
@@ -53,7 +53,7 @@ function categoryAmount(row: CategoryRow) {
   return row.expenses.reduce((sum, expense) => sum + expense.amount, 0);
 }
 
-function createStyles(scale: number) {
+function createStyles(scale: number, colors: Palette) {
   const s = (value: number) => scaled(value, scale);
 
   return StyleSheet.create({
@@ -87,13 +87,15 @@ function createStyles(scale: number) {
   });
 }
 
-export function CategoriesCard({ color = colors.accent, onManageExpenses }: CategoriesCardProps) {
+export function CategoriesCard({ color, onManageExpenses }: CategoriesCardProps) {
   const scale = useScale();
-  const styles = useMemo(() => createStyles(scale), [scale]);
+  const colors = useColors();
+  const styles = useMemo(() => createStyles(scale, colors), [scale, colors]);
+  const cardColor = color ?? colors.categories;
   const total = rows.reduce((sum, row) => sum + categoryAmount(row), 0);
 
   return (
-    <BinderCard title="Catégories" color={color}>
+    <BinderCard title="Catégories" color={cardColor}>
       <View style={styles.header}>
         <Text style={styles.count}>
           {rows.length} {rows.length > 1 ? "catégories" : "catégorie"}
@@ -113,7 +115,7 @@ export function CategoriesCard({ color = colors.accent, onManageExpenses }: Cate
               amount: formatAmount(e.amount),
             }))}
             onManageExpenses={() => onManageExpenses?.({ id: row.id, name: row.name })}
-            color={color}
+            color={cardColor}
           />
         ))}
       </View>

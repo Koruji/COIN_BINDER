@@ -4,7 +4,7 @@ import { ComponentRef, ReactNode, RefObject, useEffect, useMemo } from "react";
 import { BackHandler, Platform, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import { colors, fonts, radii } from "@/constants/theme";
+import { fonts, Palette, radii, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 
 type BinderDialogProps = {
@@ -20,7 +20,7 @@ const webBlurStyle = { backdropFilter: "blur(5px)" } as ViewStyle;
 
 const closeIcon = require("../../assets/images/close-circle.svg");
 
-function createStyles(scale: number, color: string) {
+function createStyles(scale: number, color: string, colors: Palette) {
   const s = (value: number) => scaled(value, scale);
 
   return StyleSheet.create({
@@ -69,7 +69,7 @@ function createStyles(scale: number, color: string) {
       borderTopRightRadius: s(radii.large),
     },
     title: {
-      color: colors.card,
+      color: colors.onColor,
       fontFamily: fonts.title,
       fontSize: s(16),
     },
@@ -92,12 +92,17 @@ export function BinderDialog({
   visible,
   onClose,
   title,
-  color = colors.accent,
+  color,
   blurTarget,
   children,
 }: BinderDialogProps) {
   const scale = useScale();
-  const styles = useMemo(() => createStyles(scale, color), [scale, color]);
+  const colors = useColors();
+  const dialogColor = color ?? colors.categories;
+  const styles = useMemo(
+    () => createStyles(scale, dialogColor, colors),
+    [scale, dialogColor, colors],
+  );
 
   useEffect(() => {
     if (!visible) return;
@@ -140,7 +145,7 @@ export function BinderDialog({
             accessibilityRole="button"
             accessibilityLabel="Fermer"
           >
-            <Image source={closeIcon} tintColor={colors.card} style={styles.closeIcon} />
+            <Image source={closeIcon} tintColor={colors.onColor} style={styles.closeIcon} />
           </Pressable>
           <View style={styles.titleTab}>
             <Text style={styles.title} numberOfLines={1}>

@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { colors, fonts, radii } from "@/constants/theme";
+import { fonts, Palette, radii, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 import { blend } from "@/utils/color";
 
@@ -31,7 +31,7 @@ const arrowDown = require("../../assets/images/arrow-drop-down.svg");
 
 const DURATION = 280;
 
-function createStyles(scale: number, color: string) {
+function createStyles(scale: number, color: string, colors: Palette) {
   const s = (value: number) => scaled(value, scale);
 
   return StyleSheet.create({
@@ -155,10 +155,15 @@ export function CategoryBar({
   ratio,
   expenses = [],
   onManageExpenses,
-  color = colors.accent,
+  color,
 }: CategoryBarProps) {
   const scale = useScale();
-  const styles = useMemo(() => createStyles(scale, color), [scale, color]);
+  const colors = useColors();
+  const barColor = color ?? colors.categories;
+  const styles = useMemo(
+    () => createStyles(scale, barColor, colors),
+    [scale, barColor, colors],
+  );
   const progress = Math.min(Math.max(ratio, 0), 1);
 
   const [expanded, setExpanded] = useState(false);
@@ -206,7 +211,7 @@ export function CategoryBar({
           accessibilityState={{ expanded }}
         >
           <Animated.View style={arrowStyle}>
-            <Image source={arrowDown} tintColor={color} style={styles.arrow} />
+            <Image source={arrowDown} tintColor={barColor} style={styles.arrow} />
           </Animated.View>
         </Pressable>
       </View>
