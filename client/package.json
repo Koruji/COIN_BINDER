@@ -39,6 +39,7 @@
     "eslint-config-expo": "~58.0.4",
     "jest": "~30.5.2",
     "jest-expo": "~58.0.15",
+    "start-server-and-test": "^3.0.13",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -48,11 +49,35 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "generate:api": "npx openapi-typescript ../openapi.yaml -o src/types/api.d.ts",
-    "test": "jest",
-    "mock": "prism mock -p 4010 ../openapi.yaml"
+    "test": "npm run test:unit",
+    "mock": "prism mock -p 4010 ../openapi.yaml",
+    "test:unit": "jest --testPathIgnorePatterns=tests/integration",
+    "test:int:run": "jest --config jest.integration.config.js",
+    "test:int": "start-server-and-test mock tcp:4010 test:int:run",
+    "test:coverage": "npm run test:unit -- --coverage"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/types/**",
+      "!src/api/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 35,
+        "branches": 5,
+        "functions": 30,
+        "lines": 35
+      },
+      "./src/utils/": {
+        "statements": 80,
+        "branches": 80,
+        "functions": 80,
+        "lines": 80
+      }
+    }
   },
   "private": true
 }
