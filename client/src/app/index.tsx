@@ -6,18 +6,13 @@ import { CategoriesCard } from "@/components/CategoriesCard";
 import { Header } from "@/components/Header";
 import { useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
+import { shiftMonth } from "@/utils/shiftMonth";
 
 export default function Index() {
   const colors = useColors();
   const scale = useScale();
   const insets = useSafeAreaInsets();
   const [period, setPeriod] = useState({ month: 9, year: 2026 });
-
-  const shiftMonth = (delta: number) =>
-    setPeriod(({ month, year }) => {
-      const index = year * 12 + month + delta;
-      return { month: ((index % 12) + 12) % 12, year: Math.floor(index / 12) };
-    });
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
@@ -44,8 +39,8 @@ export default function Index() {
             remaining="1040, 61"
             savings="100, 00"
             expenses="1319, 39"
-            onPreviousMonth={() => shiftMonth(-1)}
-            onNextMonth={() => shiftMonth(1)}
+            onPreviousMonth={() => shiftMonth(period, -1)}
+            onNextMonth={() => shiftMonth(period, 1)}
           />
         </View>
         <View
