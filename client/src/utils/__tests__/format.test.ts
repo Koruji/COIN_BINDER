@@ -9,7 +9,7 @@ describe("formatAmount", () => {
         [-5.5, "-5,50"]
     ])
     ("convert %d to %s", (input, expected) => {
-        var result = formatAmount(input);
+        const result = formatAmount(input);
         expect(result).toEqual(expected);
     })
 });
