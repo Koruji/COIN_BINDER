@@ -2,32 +2,99 @@ name: CI Client
 
 on:
   pull_request:
-    paths: ["client/**", "openapi.yaml", ".github/workflows/ci-client.yml"]
+    paths:
+      - "client/**"
+      - "openapi.yaml"
+      - ".github/workflows/ci-client.yml"
+      - ".github/actions/setup-client/**"
   push:
     branches: [main, develop]
-    paths: ["client/**"]
+    paths:
+      - "client/**"
+
+concurrency:
+  group: ci-client-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: client
 
 jobs:
-  test:
+  lint:
+    name: Lint (ESLint)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: client
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: client/package-lock.json
-      - run: npm ci
-      - run: npm run lint
-      - run: npx tsc --noEmit
-      - run: npm run test:coverage
-      - run: npm run test:int
-      - uses: actions/upload-artifact@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup client
+        uses: ./.github/actions/setup-client
+
+      - name: Run ESLint
+        run: npm run lint
+
+  typecheck:
+    name: Typecheck (TypeScript)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup client
+        uses: ./.github/actions/setup-client
+
+      - name: Run TypeScript compiler
+        run: npx tsc --noEmit
+
+  unit-tests:
+    name: Unit tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup client
+        uses: ./.github/actions/setup-client
+
+      - name: Run unit tests with coverage thresholds
+        run: npm run test:coverage
+
+      - name: Upload coverage report
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: coverage
+          name: coverage-report
           path: client/coverage
           if-no-files-found: ignore
+
+  integration-tests:
+    name: Integration tests (Prism mock)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup client
+        uses: ./.github/actions/setup-client
+
+      - name: Start Prism mock and run integration tests
+        run: npm run test:int
+
+  client-checks:
+    name: Client checks (all green)
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, unit-tests, integration-tests]
+    if: always()
+    steps:
+      - name: Verify every job succeeded
+        working-directory: .
+        run: |
+          echo "lint:               ${{ needs.lint.result }}"
+          echo "typecheck:          ${{ needs.typecheck.result }}"
+          echo "unit-tests:         ${{ needs.unit-tests.result }}"
+          echo "integration-tests:  ${{ needs.integration-tests.result }}"
+          if [ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = "true" ]; then
+            echo "At least one job failed."
+            exit 1
+          fi
