@@ -4,6 +4,7 @@ mod auth;
 mod config;
 mod db;
 mod error;
+mod json;
 mod models;
 mod routes;
 mod state;

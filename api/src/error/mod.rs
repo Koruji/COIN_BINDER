@@ -1,6 +1,7 @@
 use axum::response::{IntoResponse, Response};
 use axum::http::StatusCode;
 use axum::Json;
+use axum::extract::rejection::JsonRejection;
 use serde::Serialize;
 
 #[derive(Debug, thiserror::Error)]
@@ -19,6 +20,12 @@ pub enum AppError {
 
     #[error("erreur base de données : {0}")]
     Database(#[from] sqlx::Error),
+}
+
+impl From<JsonRejection> for AppError {
+    fn from(rejection: JsonRejection) -> Self {
+        AppError::Validation(rejection.body_text())
+    }
 }
 
 #[derive(Serialize)]

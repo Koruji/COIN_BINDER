@@ -1,6 +1,7 @@
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::Json;
+use crate::json::AppJson;
 use crate::auth::AuthUser;
 use crate::error::AppError;
 use crate::models::expense::{Expense, NewExpenseForCategory, UpdateExpense};
@@ -34,7 +35,7 @@ pub async fn get_expense_by_id(Path(id): Path<i64>, auth_user: AuthUser, State(s
     Ok(Json(expense))
 }
 
-pub async fn create_category_expense(State(state): State<AppState>, auth_user: AuthUser, Json(payload): Json<NewExpenseForCategory>) -> Result<(StatusCode, Json<Expense>), AppError> {
+pub async fn create_category_expense(State(state): State<AppState>, auth_user: AuthUser, AppJson(payload): AppJson<NewExpenseForCategory>) -> Result<(StatusCode, Json<Expense>), AppError> {
     if payload.label.trim().is_empty() {
         return Err(AppError::Validation("le label ne peut pas être vide".to_string()));
     }
@@ -60,7 +61,7 @@ pub async fn create_category_expense(State(state): State<AppState>, auth_user: A
     Ok((StatusCode::CREATED, Json(expense)))
 }
 
-pub async fn modify_expense(Path(id): Path<i64>, auth_user: AuthUser, State(state): State<AppState>, Json(payload): Json<UpdateExpense>) -> Result<Json<Expense>, AppError> {
+pub async fn modify_expense(Path(id): Path<i64>, auth_user: AuthUser, State(state): State<AppState>, AppJson(payload): AppJson<UpdateExpense>) -> Result<Json<Expense>, AppError> {
     if payload.label.trim().is_empty() {
         return Err(AppError::Validation("le label ne peut pas être vide".to_string()));
     }

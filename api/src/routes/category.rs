@@ -1,6 +1,7 @@
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::Json;
+use crate::json::AppJson;
 use crate::models::category::{Category, NewCategory, UpdateCategory};
 use crate::error::AppError;
 use crate::state::AppState;
@@ -15,7 +16,7 @@ pub async fn list_category(State(state): State<AppState>, auth_user: AuthUser) -
     Ok(Json(categories))
 }
 
-pub async fn create_category(State(state): State<AppState>, auth_user: AuthUser, Json(payload): Json<NewCategory>) -> Result<(StatusCode, Json<Category>), AppError> {
+pub async fn create_category(State(state): State<AppState>, auth_user: AuthUser, AppJson(payload): AppJson<NewCategory>) -> Result<(StatusCode, Json<Category>), AppError> {
     if payload.label.trim().is_empty() {
         return Err(AppError::Validation("le label ne peut pas être vide".to_string()));
     }
@@ -42,7 +43,7 @@ pub async fn get_category_by_id(Path(id): Path<i64>, auth_user: AuthUser, State(
     Ok(Json(category))
 }
 
-pub async fn modify_category(Path(id): Path<i64>, auth_user: AuthUser, State(state): State<AppState>, Json(payload): Json<UpdateCategory>) -> Result<Json<Category>, AppError> {
+pub async fn modify_category(Path(id): Path<i64>, auth_user: AuthUser, State(state): State<AppState>, AppJson(payload): AppJson<UpdateCategory>) -> Result<Json<Category>, AppError> {
     if payload.label.trim().is_empty() {
         return Err(AppError::Validation("le label ne peut pas être vide".to_string()));
     }
