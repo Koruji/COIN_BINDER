@@ -51,8 +51,7 @@
     "test": "npm run test:unit",
     "mock": "prism mock -p 4010 ../openapi.yaml",
     "test:unit": "jest --testPathIgnorePatterns=tests/integration",
-    "test:int:run": "jest --config jest.integration.config.js",
-    "test:int": "start-server-and-test mock tcp:4010 test:int:run",
+    "test:int": "jest --config jest.integration.config.js",
     "test:coverage": "npm run test:unit -- --coverage"
   },
   "jest": {
