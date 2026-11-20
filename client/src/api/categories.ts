@@ -1,17 +1,25 @@
-import type { Category } from "@/types/categories";
+import { request } from "@/api/request";
+import type { Category, NewCategory, UpdateCategory } from "@/types/categories";
 
-export async function getCategories(
-  baseUrl: string | undefined = process.env.EXPO_PUBLIC_API_URL,
-): Promise<Category[]> {
-  if (!baseUrl) {
-    throw new Error("API base URL is not defined (EXPO_PUBLIC_API_URL)");
-  }
+export function getCategories(): Promise<Category[]> {
+  return request<Category[]>("GET", "/categories");
+}
 
-  const response = await fetch(`${baseUrl}/categories`);
+export function getCategoryById(id: number): Promise<Category> {
+  return request<Category>("GET", `/categories/${id}`);
+}
 
-  if (!response.ok) {
-    throw new Error(`GET /categories failed with status ${response.status}`);
-  }
+export function createCategory(category: NewCategory): Promise<Category> {
+  return request<Category>("POST", "/categories", category);
+}
 
-  return response.json();
+export function updateCategory(
+  id: number,
+  category: UpdateCategory,
+): Promise<Category> {
+  return request<Category>("PUT", `/categories/${id}`, category);
+}
+
+export function deleteCategory(id: number): Promise<void> {
+  return request<void>("DELETE", `/categories/${id}`);
 }
