@@ -11,12 +11,8 @@ import Animated, {
 import { fonts, Palette, radii, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 import { blend } from "@/utils/color";
-
-export type Expense = {
-  id: string;
-  label: string;
-  amount: string;
-};
+import { Expense } from "@/types/categories";
+import { clamp } from "@/utils/amount";
 
 type CategoryBarProps = {
   name: string;
@@ -164,7 +160,7 @@ export function CategoryBar({
     () => createStyles(scale, barColor, colors),
     [scale, barColor, colors],
   );
-  const progress = Math.min(Math.max(ratio, 0), 1);
+  const progress = clamp(ratio, 0, 1);
 
   const [expanded, setExpanded] = useState(false);
   const open = useSharedValue(0);

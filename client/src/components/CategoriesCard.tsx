@@ -5,18 +5,8 @@ import { CategoryBar } from "@/components/CategoryBar";
 import { BinderCard } from "@/components/BinderCard";
 import { fonts, Palette, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
-
-type ExpenseRow = {
-  id: string;
-  label: string;
-  amount: number;
-};
-
-type CategoryRow = {
-  id: string;
-  name: string;
-  expenses: ExpenseRow[];
-};
+import { CategoryRow } from "@/types/categories";
+import { categoryAmount, formatAmount, totalAmount, categoryRatio } from "@/utils/amount";
 
 type CategoriesCardProps = {
   color?: string;
@@ -44,14 +34,6 @@ const rows: CategoryRow[] = [
     expenses: [{ id: "1", label: "Veste", amount: 100 }],
   },
 ];
-
-function formatAmount(value: number) {
-  return value.toFixed(2).replace(".", ", ");
-}
-
-function categoryAmount(row: CategoryRow) {
-  return row.expenses.reduce((sum, expense) => sum + expense.amount, 0);
-}
 
 function createStyles(scale: number, colors: Palette) {
   const s = (value: number) => scaled(value, scale);
@@ -92,8 +74,7 @@ export function CategoriesCard({ color, onManageExpenses }: CategoriesCardProps)
   const colors = useColors();
   const styles = useMemo(() => createStyles(scale, colors), [scale, colors]);
   const cardColor = color ?? colors.categories;
-  const total = rows.reduce((sum, row) => sum + categoryAmount(row), 0);
-
+  const total = totalAmount(rows);
   return (
     <BinderCard title="Catégories" color={cardColor}>
       <View style={styles.header}>
@@ -108,7 +89,7 @@ export function CategoriesCard({ color, onManageExpenses }: CategoriesCardProps)
             key={row.id}
             name={row.name}
             amount={formatAmount(categoryAmount(row))}
-            ratio={total > 0 ? categoryAmount(row) / total : 0}
+            ratio={categoryRatio(row, total)}
             expenses={row.expenses.map((e) => ({
               id: e.id,
               label: e.label,
