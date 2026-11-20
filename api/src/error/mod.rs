@@ -1,10 +1,11 @@
-use axum::response::{IntoResponse, Response};
-use axum::http::StatusCode;
 use axum::Json;
 use axum::extract::rejection::JsonRejection;
+use axum::http::StatusCode;
+use axum::response::{IntoResponse, Response};
 use serde::Serialize;
 
 #[derive(Debug, thiserror::Error)]
+#[allow(dead_code)]
 pub enum AppError {
     #[error("ressource introuvable")]
     NotFound,
@@ -33,6 +34,7 @@ struct ErrorBody {
     message: String,
 }
 
+#[allow(dead_code)]
 impl AppError {
     pub fn is_retryable(&self) -> bool {
         matches!(self, AppError::Database(sqlx::Error::PoolTimedOut))

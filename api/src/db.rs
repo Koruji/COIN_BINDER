@@ -1,5 +1,5 @@
-use std::str::FromStr;
 use sqlx::sqlite::{SqliteConnectOptions, SqlitePool};
+use std::str::FromStr;
 
 // Seul endroit (avec Cargo.toml) à changer pour passer sur un autre SGBD.
 pub type Db = SqlitePool;

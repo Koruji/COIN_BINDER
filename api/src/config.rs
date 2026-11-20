@@ -7,8 +7,8 @@ pub struct Config {
 impl Config {
     pub fn from_env() -> Self {
         dotenvy::dotenv().ok();
-        let database_url = env::var("DATABASE_URL")
-            .unwrap_or_else(|_| "sqlite://coin_binder.db".to_string());
+        let database_url =
+            env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite://coin_binder.db".to_string());
 
         Config { database_url }
     }

@@ -9,10 +9,10 @@ pub struct Category {
 
 #[derive(serde::Deserialize)]
 pub struct NewCategory {
-    pub label: String
+    pub label: String,
 }
 
 #[derive(serde::Deserialize)]
 pub struct UpdateCategory {
-    pub label: String
+    pub label: String,
 }
