@@ -8,7 +8,11 @@ export type Category = {
   created_at: string
 }
 
-export type UpgradeCategory = {
+export type NewCategory = {
+  label: string
+}
+
+export type UpdateCategory = {
   label: string
 }
 
