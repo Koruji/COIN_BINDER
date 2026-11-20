@@ -46,11 +46,38 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "generate:api": "npx openapi-typescript ../openapi.yaml -o src/types/api.d.ts",
-    "test": "jest"
+    "test": "npm run test:unit",
+    "test:unit": "jest --testPathIgnorePatterns=tests/integration",
+    "test:int": "jest --config jest.integration.config.js",
+    "test:coverage": "jest --config jest.coverage.config.js --coverage",
+    "pretest:ci": "node -e \"require('fs').mkdirSync('reports', { recursive: true })\"",
+    "test:ci": "jest --config jest.coverage.config.js --coverage --ci --reporters=default --reporters=github-actions --json --outputFile=reports/test-results.json --coverageReporters=text-summary --coverageReporters=lcov --coverageReporters=json-summary",
+    "report": "node scripts/ci-summary.js"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "testTimeout": 20000,
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/**/__tests__/**",
+      "!src/types/**",
+      "!src/api/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 35,
+        "branches": 5,
+        "functions": 30,
+        "lines": 35
+      },
+      "./src/utils/": {
+        "statements": 80,
+        "branches": 80,
+        "functions": 80,
+        "lines": 80
+      }
+    }
   },
   "private": true
 }

@@ -132,18 +132,30 @@ export function MonthSwitcher({
         onPress={onPrevious}
         hitSlop={8}
         accessibilityRole="button"
-        accessibilityLabel="Mois précédent"
+        accessibilityLabel="Previous month"
         style={styles.arrowHit}
       >
         <View style={styles.arrowLeft} />
       </Pressable>
-      <View style={styles.group}>{renderTiles(label)}</View>
-      <View style={styles.group}>{renderTiles(String(year))}</View>
+      <View 
+        style={styles.group}
+        accessible
+        accessibilityLabel={label}
+      >
+        {renderTiles(label)}
+      </View>
+      <View
+        style={styles.group}
+        accessible
+        accessibilityLabel={String(year)}
+      >
+        {renderTiles(String(year))}
+      </View>
       <Pressable
         onPress={onNext}
         hitSlop={8}
         accessibilityRole="button"
-        accessibilityLabel="Mois suivant"
+        accessibilityLabel="Next month"
         style={styles.arrowHit}
       >
         <View style={styles.arrowRight} />

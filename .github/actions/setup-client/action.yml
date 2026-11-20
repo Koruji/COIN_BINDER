@@ -1,0 +1,17 @@
+name: Setup client
+description: Install Node.js and the client dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js (version from client/.nvmrc)
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: client/.nvmrc
+        cache: npm
+        cache-dependency-path: client/package-lock.json
+
+    - name: Install dependencies (npm ci)
+      shell: bash
+      working-directory: client
+      run: npm ci

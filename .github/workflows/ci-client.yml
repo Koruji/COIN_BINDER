@@ -2,25 +2,107 @@ name: CI Client
 
 on:
   pull_request:
-    paths: ["client/**", "openapi.yaml", ".github/workflows/ci-client.yml"]
+    paths:
+      - "client/**"
+      - ".github/workflows/ci-client.yml"
+      - ".github/actions/setup-client/**"
   push:
     branches: [main, develop]
-    paths: ["client/**"]
+    paths:
+      - "client/**"
+
+# Least privilege: the jobs only need to read the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-client-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: client
 
 jobs:
-  test:
+  # Static checks run in parallel with the tests: a lint error does not hide a
+  # failing test (and vice versa), and the PR gets all the feedback at once.
+  lint:
+    name: Lint (ESLint)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: client
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup client
+        uses: ./.github/actions/setup-client
+
+      - name: Run ESLint
+        run: npm run lint
+
+  typecheck:
+    name: Typecheck (TypeScript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup client
+        uses: ./.github/actions/setup-client
+
+      - name: Run TypeScript compiler
+        run: npx tsc --noEmit
+
+  # Unit tests (src/**/__tests__) and component integration tests
+  # (tests/integration) run in ONE Jest run, as two Jest "projects", so the
+  # coverage report counts both and nothing is executed twice.
+  # See client/jest.coverage.config.js.
+  tests:
+    name: Tests (unit + integration) and coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup client
+        uses: ./.github/actions/setup-client
+
+      # Fails the job if a test fails or if a coverage threshold is not met.
+      # Failures are also annotated on the PR by Jest's github-actions reporter.
+      - name: Run unit and integration tests with coverage
+        run: npm run test:ci
+
+      # Runs even when tests fail, to show which ones in the run summary.
+      - name: Publish test and coverage report to the run summary
+        if: always()
+        run: npm run --silent report >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reports (HTML coverage + JSON test results)
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: client/package-lock.json
-      - run: npm ci
-      - run: npm run lint
-      - run: npx tsc --noEmit
-      - run: npm test --if-present
+          name: test-and-coverage-report
+          path: |
+            client/coverage
+            client/reports
+          if-no-files-found: ignore
+          retention-days: 14
+
+  client-checks:
+    name: Client checks (all green)
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, tests]
+    if: always()
+    steps:
+      - name: Verify every job succeeded
+        working-directory: .
+        run: |
+          echo "lint:      ${{ needs.lint.result }}"
+          echo "typecheck: ${{ needs.typecheck.result }}"
+          echo "tests:     ${{ needs.tests.result }}"
+          if [ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = "true" ]; then
+            echo "At least one job failed."
+            exit 1
+          fi

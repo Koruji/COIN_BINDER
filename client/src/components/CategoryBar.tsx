@@ -11,18 +11,14 @@ import Animated, {
 import { fonts, Palette, radii, useColors } from "@/constants/theme";
 import { scaled, useScale } from "@/hooks/useScale";
 import { blend } from "@/utils/color";
-
-export type Expense = {
-  id: string;
-  label: string;
-  amount: string;
-};
+import { ExpenseRow } from "@/types/expenses";
+import { clamp, formatAmount } from "@/utils/amount";
 
 type CategoryBarProps = {
   name: string;
   amount: string;
   ratio: number;
-  expenses?: Expense[];
+  expenses?: ExpenseRow[];
   onManageExpenses?: () => void;
   color?: string;
 };
@@ -164,7 +160,7 @@ export function CategoryBar({
     () => createStyles(scale, barColor, colors),
     [scale, barColor, colors],
   );
-  const progress = Math.min(Math.max(ratio, 0), 1);
+  const progress = clamp(ratio, 0, 1);
 
   const [expanded, setExpanded] = useState(false);
   const open = useSharedValue(0);
@@ -235,7 +231,7 @@ export function CategoryBar({
               <View style={styles.leader}>
                 <View style={styles.leaderDots} />
               </View>
-              <Text style={styles.expenseAmount}>{expense.amount}</Text>
+              <Text style={styles.expenseAmount}>{formatAmount(expense.amount)}</Text>
             </View>
           ))}
           <Pressable
