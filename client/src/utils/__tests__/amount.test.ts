@@ -16,9 +16,9 @@ describe("Amount", () => {
 });
 
 const makeRow = (...amounts: number[]): CategoryRow => ({
-    id: "1",
+    id: 1,
     name: "Test",
-    expenses: amounts.map((amount, i) => ({ id: String(i), label: "Dépense", amount })),
+    expenses: amounts.map((amount, i) => ({ id: i, label: "Dépense", amount })),
 });
 
 describe("categoryAmount", () => {

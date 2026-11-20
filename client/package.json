@@ -48,7 +48,6 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "generate:api": "npx openapi-typescript ../openapi.yaml -o src/types/api.d.ts",
     "test": "npm run test:unit",
     "mock": "prism mock -p 4010 ../openapi.yaml",
     "test:unit": "jest --testPathIgnorePatterns=tests/integration",

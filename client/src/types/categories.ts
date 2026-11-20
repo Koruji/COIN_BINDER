@@ -1,17 +1,19 @@
-export type ExpenseRow = {
-  id: string;
-  label: string;
-  amount: number;
-};
+import { ExpenseRow } from "./expenses";
+
+export type Category = {
+  id: number,
+  user_id: number,
+  label: string,
+  amount: number,
+  created_at: string
+}
+
+export type UpgradeCategory = {
+  label: string
+}
 
 export type CategoryRow = {
-  id: string;
+  id: number;
   name: string;
-  expenses: ExpenseRow[];
-};
-
-export type Expense = {
-  id: string;
-  label: string;
-  amount: string;
+  expenses: ExpenseRow[]
 };

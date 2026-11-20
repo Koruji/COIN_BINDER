@@ -1,6 +1,4 @@
-import type { components } from "@/types/api";
-
-export type Category = components["schemas"]["Category"];
+import type { Category } from "@/types/categories";
 
 export async function getCategories(
   baseUrl: string | undefined = process.env.EXPO_PUBLIC_API_URL,
