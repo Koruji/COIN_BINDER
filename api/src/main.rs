@@ -10,6 +10,7 @@ mod routes;
 mod state;
 
 use state::AppState;
+use tower_http::cors::CorsLayer;
 
 #[tokio::main]
 async fn main() {
@@ -46,6 +47,7 @@ async fn main() {
                 .put(routes::expense::modify_expense)
                 .delete(routes::expense::delete_expense),
         )
+        .layer(CorsLayer::permissive())
         .with_state(app_state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
