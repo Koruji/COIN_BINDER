@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="shared/logo_dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="shared/logo_light.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="shared/logo_light.svg">
+    <source media="(prefers-color-scheme: light)" srcset="shared/logo_dark.svg">
     <img alt="Coin Binder" src="shared/logo_light.svg" width="351">
   </picture>
 </p>
