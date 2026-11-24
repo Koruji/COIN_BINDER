@@ -4,8 +4,8 @@ import { CategoryBar } from "@/components/CategoryBar";
 import { ExpenseRow } from "@/types/expenses";
 
 const expenses: ExpenseRow[] = [
-  { id: 1, label: "Assurance", amount: 68.9 },
-  { id: 2, label: "Entretien", amount: 120 },
+  { id: 1, label: "Assurance", amount: 68.9, month: "2026-10-01T00:00:00Z" },
+  { id: 2, label: "Entretien", amount: 120, month: "2026-10-01T00:00:00Z" },
 ];
 
 describe("[integration] CategoryBar + formatAmount", () => {

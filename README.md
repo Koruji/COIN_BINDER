@@ -51,6 +51,8 @@ Variable optionnelle (voir [`api/.env.example`](api/.env.example)) :
 |---|---|
 | `DATABASE_URL` | `sqlite://coin_binder.db` |
 
+> Le CORS est ouvert à toutes les origines (configuration de développement, à restreindre avant la mise en production).
+
 > L'authentification n'est pas encore implémentée : toutes les requêtes sont faites avec un utilisateur factice (id `1`).
 
 ### Client

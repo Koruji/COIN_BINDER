@@ -18,7 +18,7 @@ describe("Amount", () => {
 const makeRow = (...amounts: number[]): CategoryRow => ({
     id: 1,
     name: "Test",
-    expenses: amounts.map((amount, i) => ({ id: i, label: "Dépense", amount })),
+    expenses: amounts.map((amount, i) => ({ id: i, label: "Dépense", amount, month: "2026-10-01T00:00:00Z" })),
 });
 
 describe("categoryAmount", () => {

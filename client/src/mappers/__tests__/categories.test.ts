@@ -35,8 +35,8 @@ describe("toCategoryRow", () => {
     ]);
 
     expect(result.expenses).toEqual([
-      { id: 1, label: "Concert", amount: 200 },
-      { id: 2, label: "Cinéma", amount: 12.5 },
+      { id: 1, label: "Concert", amount: 200, month: "2026-10-01T00:00:00Z" },
+      { id: 2, label: "Cinéma", amount: 12.5, month: "2026-10-01T00:00:00Z" },
     ]);
   });
 

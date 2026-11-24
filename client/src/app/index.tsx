@@ -1,13 +1,16 @@
 import { BlurTargetView } from "expo-blur";
-import { ComponentRef, useRef, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ComponentRef, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { BinderDialog } from "@/components/BinderDialog";
 import { CategoriesCard } from "@/components/CategoriesCard";
 import { Header } from "@/components/Header";
-import { useColors } from "@/constants/theme";
+import { fonts, useColors } from "@/constants/theme";
+import { useCategories } from "@/hooks/useCategories";
 import { scaled, useScale } from "@/hooks/useScale";
+import { formatAmount, totalAmount } from "@/utils/amount";
+import { filterByPeriod } from "@/utils/period";
 import { shiftMonth } from "@/utils/shiftMonth";
 
 export default function Index() {
@@ -17,6 +20,8 @@ export default function Index() {
   const blurTarget = useRef<ComponentRef<typeof View>>(null);
   const [dialogCategory, setDialogCategory] = useState<string | null>(null);
   const [period, setPeriod] = useState({ month: 9, year: 2026 });
+  const { categories, loading, error, reload } = useCategories();
+  const periodCategories = useMemo(() => filterByPeriod(categories, period), [categories, period]);
 
   return (
     <View style={styles.root}>
@@ -43,7 +48,7 @@ export default function Index() {
                 year={period.year}
                 remaining="1040, 61"
                 savings="100, 00"
-                expenses="1319, 39"
+                expenses={formatAmount(totalAmount(periodCategories))}
                 onPreviousMonth={() => setPeriod(shiftMonth(period, -1))}
                 onNextMonth={() => setPeriod(shiftMonth(period, 1))}
               />
@@ -58,9 +63,21 @@ export default function Index() {
                 },
               ]}
             >
-              <CategoriesCard
-                onManageExpenses={(category) => setDialogCategory(category.name)}
-              />
+              {error ? (
+                <View style={styles.feedback}>
+                  <Text style={[styles.feedbackText, { color: colors.text }]}>{error}</Text>
+                  <Pressable accessibilityRole="button" onPress={reload}>
+                    <Text style={[styles.retry, { color: colors.text }]}>Réessayer</Text>
+                  </Pressable>
+                </View>
+              ) : loading && categories.length === 0 ? (
+                <ActivityIndicator color={colors.text} />
+              ) : (
+                <CategoriesCard
+                  categories={periodCategories}
+                  onManageExpenses={(category) => setDialogCategory(category.name)}
+                />
+              )}
             </View>
           </ScrollView>
         </View>
@@ -89,6 +106,20 @@ const styles = StyleSheet.create({
   headerBand: {
     width: "100%",
     alignItems: "center",
+  },
+  feedback: {
+    alignItems: "center",
+    gap: 12,
+  },
+  feedbackText: {
+    fontFamily: fonts.monoRegular,
+    fontSize: 14,
+    textAlign: "center",
+  },
+  retry: {
+    fontFamily: fonts.monoSemiBold,
+    fontSize: 14,
+    textDecorationLine: "underline",
   },
   body: {
     flex: 1,
