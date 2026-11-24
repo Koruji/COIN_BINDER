@@ -9,33 +9,10 @@ import { CategoryRow } from "@/types/categories";
 import { categoryAmount, formatAmount, totalAmount, categoryRatio } from "@/utils/amount";
 
 type CategoriesCardProps = {
+  categories: CategoryRow[];
   color?: string;
   onManageExpenses?: (category: { id: number; name: string }) => void;
 };
-
-// Mock data ---------- //
-const categoryRows: CategoryRow[] = [
-  {
-    id: 1,
-    name: "CIVIC",
-    expenses: [
-      { id: 1, label: "Assurance voiture", amount: 68.94 },
-      { id: 2, label: "Assurance voiture", amount: 88.94 },
-      { id: 3, label: "Assurance voiture", amount: 88.94 },
-    ],
-  },
-  {
-    id: 2,
-    name: "Sorties, events",
-    expenses: [{ id: 1, label: "Concert", amount: 200 }],
-  },
-  {
-    id: 3,
-    name: "Vêtements",
-    expenses: [{ id: 1, label: "Veste", amount: 100 }],
-  },
-];
-// ------------------- //
 
 function createStyles(scale: number, colors: Palette) {
   const s = (value: number) => scaled(value, scale);
@@ -71,29 +48,29 @@ function createStyles(scale: number, colors: Palette) {
   });
 }
 
-export function CategoriesCard({ color, onManageExpenses }: CategoriesCardProps) {
+export function CategoriesCard({ categories, color, onManageExpenses }: CategoriesCardProps) {
   const scale = useScale();
   const colors = useColors();
   const styles = useMemo(() => createStyles(scale, colors), [scale, colors]);
   const cardColor = color ?? colors.categories;
-  const total = totalAmount(categoryRows);
+  const total = totalAmount(categories);
   return (
     <BinderCard title="Catégories" color={cardColor}>
       <View style={styles.header}>
         <Text style={styles.count}>
-          {categoryRows.length} {categoryRows.length > 1 ? "catégories" : "catégorie"}
+          {categories.length} {categories.length > 1 ? "catégories" : "catégorie"}
         </Text>
         <Text style={styles.total}>{formatAmount(total)}</Text>
       </View>
       <View style={styles.list}>
-        {categoryRows.map((categoryRow) => (
+        {categories.map((category) => (
           <CategoryBar
-            key={categoryRow.id}
-            name={categoryRow.name}
-            amount={formatAmount(categoryAmount(categoryRow))}
-            ratio={categoryRatio(categoryRow, total)}
-            expenses={categoryRow.expenses}
-            onManageExpenses={() => onManageExpenses?.({ id: categoryRow.id, name: categoryRow.name })}
+            key={category.id}
+            name={category.name}
+            amount={formatAmount(categoryAmount(category))}
+            ratio={categoryRatio(category, total)}
+            expenses={category.expenses}
+            onManageExpenses={() => onManageExpenses?.({ id: category.id, name: category.name })}
             color={cardColor}
           />
         ))}

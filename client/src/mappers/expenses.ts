@@ -4,6 +4,7 @@ export function toExpenseRow(expense: Expense): ExpenseRow {
     return {
         id: expense.id,
         label: expense.label,
-        amount: expense.amount
+        amount: expense.amount,
+        month: expense.month
     };
 }

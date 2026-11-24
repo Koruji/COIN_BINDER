@@ -60,7 +60,7 @@ describe("useCategories", () => {
 
     expect(result.current.error).toBeNull();
     expect(result.current.categories).toEqual([
-      { id: 1, name: "Courses", expenses: [{ id: 10, label: "Expense 10", amount: 54.3 }] },
+      { id: 1, name: "Courses", expenses: [{ id: 10, label: "Expense 10", amount: 54.3, month: "2026-10-01T00:00:00Z" }] },
       { id: 2, name: "Abonnements", expenses: [] },
     ]);
   });

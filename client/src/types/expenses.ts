@@ -24,5 +24,6 @@ export type UpdateExpense = {
 export type ExpenseRow = {
   id: number,
   label: string,
-  amount: number
+  amount: number,
+  month: string
 };

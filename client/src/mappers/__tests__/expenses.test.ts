@@ -13,18 +13,24 @@ const makeExpense = (overrides: Partial<Expense> = {}): Expense => ({
 });
 
 describe("toExpenseRow", () => {
-  test("keeps only id, label and amount", () => {
+  test("keeps only id, label, amount and month", () => {
     expect(toExpenseRow(makeExpense())).toEqual({
       id: 1,
       label: "Civic",
       amount: 350.9,
+      month: "2026-10-01T00:00:00Z",
     });
   });
 
   test("works when the expense has no category", () => {
     const expense = makeExpense({ category_id: undefined });
 
-    expect(toExpenseRow(expense)).toEqual({ id: 1, label: "Civic", amount: 350.9 });
+    expect(toExpenseRow(expense)).toEqual({
+      id: 1,
+      label: "Civic",
+      amount: 350.9,
+      month: "2026-10-01T00:00:00Z",
+    });
   });
 
   test("does not modify the input", () => {

@@ -47,6 +47,7 @@ export function useCategories() {
 
   const reload = useCallback(() => {
     setLoading(true);
+    setError(null);
     setReloadCount((count) => count + 1);
   }, []);
 
